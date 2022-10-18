@@ -33,7 +33,7 @@ const challenge = async () => {
   let serverMode = false;
 
   if (process.argv.slice(2)[0] === "-t") {
-    token = process.argv.slice(2)[0];
+    token = process.argv.slice(2)[1];
     serverMode = true;
     if (!token) {
       console.log("未提供token");
