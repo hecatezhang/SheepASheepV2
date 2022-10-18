@@ -2,7 +2,7 @@ const spawn = require("child_process").spawn;
 const { Server } = require("socket.io");
 
 const spawnSolverProcess = (type, token, socket) => {
-  const solverProcess = spawn("node", [`${type}.js`, token]);
+  const solverProcess = spawn("node", [`${type}.js`, "-t", token]);
   socket.data[`${type}Started`] = true;
   solverProcess.stdout.on("data", (data) => {
     const outputs = data
