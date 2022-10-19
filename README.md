@@ -8,8 +8,9 @@ npm install
 
 装好依赖运行
 
+每日挑战
 ```bash
-node index.js
+node challenge.js
 ```
 
 话题战：
