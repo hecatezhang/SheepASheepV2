@@ -43,11 +43,16 @@ const Solver = ({ solverType }) => {
         return;
       }
 
-      setMessageList((messageList) => [...messageList, msg]);
+      setMessageList((messageList) => [
+        ...messageList,
+        { type: "message", msg },
+      ]);
       console.log(msg);
     });
 
     socket.on("solverError", (msg) => {
+      setMessageList((messageList) => [...messageList, { type: "error", msg }]);
+
       console.error(msg);
     });
 
@@ -75,12 +80,14 @@ const Solver = ({ solverType }) => {
         <div className="flex flex-col text-3xl py-5">
           {solverType === "challenge" ? "每日挑战" : "今日话题"}自动解题
         </div>
-        {!connected && <div className="text-2xl text-red-700">!!!未连接至服务器!!!</div>}
+        {!connected && (
+          <div className="text-2xl text-red-700">!!!未连接至服务器!!!</div>
+        )}
         {connected && <TokenInput onClick={onClick} />}
         {connected && messageList.length !== 0 && (
-          <div className="flex flex-col space-y-2 border p-3 rounded-md border-slate-300 overflow-auto w-50 h-50">
-            {messageList.map((msg, index) => (
-              <MessageCard key={msg + index} msg={msg} />
+          <div className="flex flex-col space-y-2 border p-3 rounded-md border-slate-300 overflow-auto w-full md:w-auto max-h-96 bg-zinc-800">
+            {messageList.map(({ type, msg }, index) => (
+              <MessageCard key={msg + index} msg={msg} type={type} />
             ))}
           </div>
         )}

@@ -9,11 +9,15 @@ const { getSkinName } = require("./utils/skins");
 
 const initialize = async (token) => {
   console.log("获取地图信息");
-  const mapInfo = await getMapInfo(token);
-  console.log("map seed:", mapInfo.map_seed);
+  const mapInfoData = await getMapInfo(token);
+  if (mapInfoData.err_code !== 0) {
+    console.error("无法获取地图信息, 请检查token是否有效");
+    exit(1);
+  }
+
+  const mapInfo = mapInfoData.data;
   console.log("获取地图数据");
   const mapData = await getMap(mapInfo.map_md5[1], mapInfo.map_seed);
-
   return [mapInfo, mapData];
 };
 
@@ -36,7 +40,7 @@ const challenge = async () => {
     token = process.argv.slice(2)[1];
     serverMode = true;
     if (!token) {
-      console.log("未提供token");
+      console.error("未提供token");
       exit(1);
     }
   } else {

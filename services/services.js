@@ -22,7 +22,7 @@ const getMapInfo = async (token) => {
   try {
     const response = await axios(config);
 
-    return response.data.data;
+    return response.data;
   } catch (err) {
     console.log(err);
   }
@@ -82,7 +82,7 @@ const getTopicInfo = async (token) => {
   try {
     const response = await axios(config);
 
-    return response.data.data;
+    return response.data;
   } catch (err) {
     console.log(err);
   }
@@ -131,7 +131,7 @@ const getTopicMapInfo = async (token) => {
   try {
     const response = await axios(config);
 
-    return response.data.data;
+    return response.data;
   } catch (err) {
     console.log(err);
   }
