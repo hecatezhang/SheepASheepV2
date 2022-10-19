@@ -80,8 +80,8 @@ const filterSolutions = async (threads) => {
 
 const startThreads = (mapData) => {
   const promises = [];
-  promises.push(findSolution(mapData, "reverse", 0.85, 40));
-  promises.push(findSolution(mapData, "reverse", 0, 40));
+  promises.push(findSolution(mapData, "reverse", 0.85, 60));
+  promises.push(findSolution(mapData, "reverse", 0, 60));
   // promises.push(findSolution(mapData, "", 0.85, 60));
   // promises.push(findSolution(mapData, "", 0, 60));
 
