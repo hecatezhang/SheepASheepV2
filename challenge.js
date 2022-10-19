@@ -46,6 +46,8 @@ const challenge = async () => {
   while (1) {
     if (serverMode) {
       console.log(">>>CLEAR<<<");
+    } else {
+      console.clear();
     }
     retryCount += 1;
     try {

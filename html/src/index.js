@@ -11,6 +11,7 @@ import App from "./App";
 import Challenge from "./pages/Challenge";
 import Topic from "./pages/Topic";
 import Home from "./pages/Home";
+import Settings from "./pages/Settings";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter(
@@ -19,6 +20,7 @@ const router = createBrowserRouter(
       <Route path="" element={<Home />} />
       <Route path="challenge" element={<Challenge />} />
       <Route path="topic" element={<Topic />} />
+      <Route path="settings" element={<Settings />} />
     </Route>
   )
 );

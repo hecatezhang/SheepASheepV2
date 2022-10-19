@@ -75,7 +75,7 @@ const Solver = ({ solverType }) => {
         <div className="flex flex-col text-3xl py-5">
           {solverType === "challenge" ? "每日挑战" : "今日话题"}自动解题
         </div>
-        {!connected && <div>Connecting</div>}
+        {!connected && <div className="text-2xl text-red-700">!!!未连接至服务器!!!</div>}
         {connected && <TokenInput onClick={onClick} />}
         {connected && messageList.length !== 0 && (
           <div className="flex flex-col space-y-2 border p-3 rounded-md border-slate-300 ">
