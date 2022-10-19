@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 const NavBarBrand = ({ children }) => {
   return (
-    <div className="flex self-center items-center text-lg cursor-default h-2/3 px-5">
+    <div className="hidden self-center items-center text-lg cursor-default h-2/3 md:px-5 select-none md:flex">
       {children}
     </div>
   );
@@ -11,7 +11,7 @@ const NavBarBrand = ({ children }) => {
 const NavBarItem = ({ children, onClick }) => {
   return (
     <div
-      className="flex self-center items-center text-lg cursor-pointer px-5 h-2/3"
+      className="flex self-center items-center text-lg cursor-pointer px-2 md:px-5 h-2/3"
       onClick={onClick}
     >
       {children}
