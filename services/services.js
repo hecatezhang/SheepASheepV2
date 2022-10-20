@@ -36,7 +36,7 @@ async function sendMatchInfo(token, mapSeed2, matchPlayInfo) {
   var data = JSON.stringify({
     rank_score: 1,
     rank_state: 1,
-    rank_time: getRandom(1000, 1500),
+    rank_time: getRandom(300, 600),
     rank_role: 2,
     skin: 1,
     MatchPlayInfo: matchPlayInfo,
