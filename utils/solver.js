@@ -22,20 +22,15 @@ const findSolution = (mapData, issort, percent = 0, t = 60) => {
     console.log("启动", mode);
 
     const pyExec = process.platform === "win32" ? "python" : "python3";
-    const args = [
-      __dirname + "/../sheep/autoSolve.py",
-      "-t",
-      t,
-      "-p",
-      percent,
-      "-i",
-      JSON.stringify(mapData),
-    ];
+    const args = [__dirname + "/../sheep/autoSolve.py", "-t", t, "-p", percent];
     if (issort == "reverse") {
       args.push("-s", "reverse");
     }
 
     const py = spawn(pyExec, args);
+
+    py.stdin.write(JSON.stringify(mapData))
+    py.stdin.end()
 
     py.stdout.on("data", function (data) {
       const outputs = data
