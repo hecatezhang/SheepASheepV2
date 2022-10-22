@@ -32,10 +32,6 @@ const getMapInfo = async (token, isTopic) => {
 };
 
 async function sendMatchInfo(token, mapSeed2, matchPlayInfo, isTopic = false) {
-  // console.log("token", token);
-  // console.log("map_seed2", mapSeed2);
-  // console.log("matchPlayInfo", matchPlayInfo);
-
   const data = isTopic
     ? JSON.stringify({
         rank_state: 1,
