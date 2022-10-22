@@ -4,38 +4,24 @@ const { performance } = require("perf_hooks");
 const { getMap } = require("./mapUtils");
 const {
   getMapInfo,
-  getTopicMapInfo,
   getTopicInfo,
   topicJoinSide,
-  sendTopicMatchInfo,
   sendMatchInfo,
 } = require("../services/services");
-const { getRandom, delay, prompt } = require("./helpers");
 const {
+  getRandom,
+  delay,
+  prompt,
   matchPlayInfoToStr,
-  topicMatchPlayInfoToStr,
-} = require("./getMatchPlayInfo");
+  getSolverMode,
+} = require("./helpers");
 const { getSkinName } = require("./skins");
-
-const getMode = (issort, percent) => {
-  if (issort !== "true" && issort !== "reverse" && percent === 0.85) {
-    return "普通模式";
-  } else if (issort == "reverse" && percent == 0.85) {
-    return "高层优先模式";
-  } else if (issort != "true" && issort != "reverse" && percent == 0) {
-    return "优先移除两张相同类型的手牌模式";
-  } else if (issort == "reverse" && percent == 0) {
-    return "高层优先且优先移除两张相同类型的手牌模式";
-  } else {
-    return "自定义模式";
-  }
-};
 
 const findSolution = (mapData, issort, percent = 0, t = 60) => {
   return new Promise((resolve) => {
     let solved = false;
     let solution = undefined;
-    const mode = getMode(issort, percent);
+    const mode = getSolverMode(issort, percent);
     console.log("启动", mode);
 
     const pyExec = process.platform === "win32" ? "python" : "python3";
@@ -135,16 +121,12 @@ const initializeTopic = async (token) => {
 };
 
 const initialize = async (token, isTopic = false) => {
+  console.log(">> 初始化地图信息 <<");
   if (isTopic) {
     await initializeTopic(token);
   }
   console.log("获取地图信息");
-  let mapInfoData;
-  if (isTopic) {
-    mapInfoData = await getTopicMapInfo(token);
-  } else {
-    mapInfoData = await getMapInfo(token);
-  }
+  const mapInfoData = await getMapInfo(token, isTopic);
   if (mapInfoData.err_code !== 0) {
     console.error("无法获取地图信息, 请检查token是否有效");
     exit(1);
@@ -164,6 +146,41 @@ const waitForSomeTime = async (runningTime) => {
     console.log("===================================");
     await delay(waitTime);
   }
+};
+
+const sendSolutionToServer = async (mapInfo, mapData, solution, isTopic) => {
+  console.log(">> 发送MatchPlayInfo到服务器 <<");
+  const matchPlayInfo = await matchPlayInfoToStr(mapData, solution, isTopic);
+  // console.log(matchPlayInfo);
+  const result = await sendMatchInfo(
+    token,
+    mapInfo.map_seed_2,
+    matchPlayInfo,
+    isTopic
+  );
+  console.log("服务器返回数据:", result);
+  const { err_code: errorCode, data } = result;
+  if (errorCode !== 0) {
+    console.error("服务器返回数据出错, 可能今日已通关或者解不正确");
+    exit(1);
+  }
+  console.log(">> 完成 <<");
+  console.log("获得皮肤", getSkinName(data.skin_id));
+};
+
+const getSolutionFromSolver = async (mapData) => {
+  console.log("===================================");
+  console.log(">> 求解 <<");
+  const startTime = performance.now();
+  const threads = startThreads(mapData, 60);
+  console.log("===================================");
+
+  const solution = await filterSolutions(threads);
+  const endTime = performance.now();
+
+  const runningTime = Math.ceil((endTime - startTime) / 1000);
+
+  return [solution, runningTime];
 };
 
 const main = async (isTopic) => {
@@ -192,51 +209,17 @@ const main = async (isTopic) => {
     try {
       console.log(">>> 第", retryCount, "次尝试 <<<");
       console.log("===================================");
-      console.log(">> 初始化地图信息 <<");
-      const [mapInfo, mapData] = await initialize(token, isTopic);
-      console.log("===================================");
-      console.log(">> 求解 <<");
-      const startTime = performance.now();
-      const threads = startThreads(mapData, 60);
-      console.log("===================================");
 
-      const solution = await filterSolutions(threads);
+      const [mapInfo, mapData] = await initialize(token, isTopic);
+      const solution = await getSolutionFromSolver(mapData);
       if (!solution) {
         console.log("无解, 开始下一轮尝试");
         await delay(2);
         continue;
       }
-      const endTime = performance.now();
-
-      const runningTime = Math.ceil((endTime - startTime) / 1000);
       await waitForSomeTime(runningTime);
+      await sendSolutionToServer(mapInfo, mapData, solution, isTopic);
 
-      console.log(">> 发送MatchPlayInfo到服务器 <<");
-      let matchPlayInfo;
-      if (isTopic) {
-        matchPlayInfo = await topicMatchPlayInfoToStr(mapData, solution);
-      } else {
-        matchPlayInfo = await matchPlayInfoToStr(mapData, solution);
-      }
-      // console.log(matchPlayInfo);
-      let result;
-      if (isTopic) {
-        result = await sendTopicMatchInfo(
-          token,
-          mapInfo.map_seed_2,
-          matchPlayInfo
-        );
-      } else {
-        result = await sendMatchInfo(token, mapInfo.map_seed_2, matchPlayInfo);
-      }
-      console.log("服务器返回数据:", result);
-      const { err_code: errorCode, data } = result;
-      if (errorCode !== 0) {
-        console.error("服务器返回数据出错, 可能今日已通关或者解不正确");
-        exit(1);
-      }
-      console.log(">> 完成 <<");
-      console.log("获得皮肤", getSkinName(data.skin_id));
       if (serverMode) {
         console.log(">>>COMPLETED<<<");
       }

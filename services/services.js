@@ -4,10 +4,13 @@ const { getRandom } = require("../utils/helpers");
 const BASE_URL = "https://cat-match.easygame2021.com/sheep/v1/game";
 const STATIC_ASSETS_URL = "https://cat-match-static.easygame2021.com";
 
-const getMapInfo = async (token) => {
+const getMapInfo = async (token, isTopic) => {
   const config = {
     method: "get",
-    url: `${BASE_URL}/map_info_ex?matchType=3`,
+    url: isTopic
+      ? `${BASE_URL}/topic/game_start?`
+      : `${BASE_URL}/map_info_ex?matchType=3`,
+
     headers: {
       Connection: "keep-alive",
       t: token,
@@ -28,25 +31,33 @@ const getMapInfo = async (token) => {
   }
 };
 
-async function sendMatchInfo(token, mapSeed2, matchPlayInfo) {
+async function sendMatchInfo(token, mapSeed2, matchPlayInfo, isTopic = false) {
   // console.log("token", token);
   // console.log("map_seed2", mapSeed2);
   // console.log("matchPlayInfo", matchPlayInfo);
 
-  var data = JSON.stringify({
-    rank_score: 1,
-    rank_state: 1,
-    rank_time: getRandom(300, 600),
-    rank_role: 2,
-    skin: 1,
-    MatchPlayInfo: matchPlayInfo,
-    MapSeed2: mapSeed2,
-    Version: "0.0.1",
-  });
+  const data = isTopic
+    ? JSON.stringify({
+        rank_state: 1,
+        rank_time: getRandom(300, 600),
+        play_info: matchPlayInfo,
+        MapSeed2: mapSeed2,
+        Version: "0.0.1",
+      })
+    : JSON.stringify({
+        rank_score: 1,
+        rank_state: 1,
+        rank_time: getRandom(300, 600),
+        rank_role: 2,
+        skin: 1,
+        MatchPlayInfo: matchPlayInfo,
+        MapSeed2: mapSeed2,
+        Version: "0.0.1",
+      });
 
   var config = {
     method: "post",
-    url: `${BASE_URL}/game_over_ex?`,
+    url: isTopic ? `${BASE_URL}/topic/game_over?` : `${BASE_URL}/game_over_ex?`,
     headers: {
       Connection: "keep-alive",
       t: token,
@@ -113,63 +124,6 @@ async function topicJoinSide(token, side) {
   return response.data;
 }
 
-const getTopicMapInfo = async (token) => {
-  const config = {
-    method: "get",
-    url: `${BASE_URL}/topic/game_start?`,
-    headers: {
-      Connection: "keep-alive",
-      t: token,
-      "content-type": "application/json",
-      "User-Agent":
-        "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.29(0x18001d2c) NetType/WIFI Language/zh_CN",
-      Referer:
-        "https://servicewechat.com/wx141bfb9b73c970a9/34/page-frame.html",
-    },
-  };
-
-  try {
-    const response = await axios(config);
-
-    return response.data;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-async function sendTopicMatchInfo(token, mapSeed2, matchPlayInfo) {
-  // console.log("token", token);
-  // console.log("map_seed2", mapSeed2);
-  // console.log("matchPlayInfo", matchPlayInfo);
-
-  var data = JSON.stringify({
-    rank_state: 1,
-    rank_time: getRandom(300, 600),
-    play_info: matchPlayInfo,
-    MapSeed2: mapSeed2,
-    Version: "0.0.1",
-  });
-
-  var config = {
-    method: "post",
-    url: `${BASE_URL}/topic/game_over?`,
-    headers: {
-      Connection: "keep-alive",
-      t: token,
-      "content-type": "application/json",
-      "User-Agent":
-        "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.29(0x18001d2c) NetType/WIFI Language/zh_CN",
-      Referer:
-        "https://servicewechat.com/wx141bfb9b73c970a9/34/page-frame.html",
-    },
-    data,
-  };
-
-  const response = await axios(config);
-
-  return response.data;
-}
-
 const getMapFromMD5 = async (md5) => {
   let config = {
     method: "get",
@@ -192,6 +146,4 @@ module.exports = {
   getMapInfo,
   getTopicInfo,
   topicJoinSide,
-  getTopicMapInfo,
-  sendTopicMatchInfo,
 };
