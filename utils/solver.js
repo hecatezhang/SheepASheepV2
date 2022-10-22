@@ -148,7 +148,14 @@ const waitForSomeTime = async (runningTime) => {
   }
 };
 
-const sendSolutionToServer = async (mapInfo, mapData, solution, isTopic) => {
+const sendSolutionToServer = async (
+  mapInfo,
+  mapData,
+  solution,
+  runningTime,
+  isTopic
+) => {
+  await waitForSomeTime(runningTime);
   console.log(">> 发送MatchPlayInfo到服务器 <<");
   const matchPlayInfo = await matchPlayInfoToStr(mapData, solution, isTopic);
   // console.log(matchPlayInfo);
@@ -211,14 +218,19 @@ const main = async (isTopic) => {
       console.log("===================================");
 
       const [mapInfo, mapData] = await initialize(token, isTopic);
-      const solution = await getSolutionFromSolver(mapData);
+      const [solution, runningTime] = await getSolutionFromSolver(mapData);
       if (!solution) {
         console.log("无解, 开始下一轮尝试");
         await delay(2);
         continue;
       }
-      await waitForSomeTime(runningTime);
-      await sendSolutionToServer(mapInfo, mapData, solution, isTopic);
+      await sendSolutionToServer(
+        mapInfo,
+        mapData,
+        solution,
+        runningTime,
+        isTopic
+      );
 
       if (serverMode) {
         console.log(">>>COMPLETED<<<");
