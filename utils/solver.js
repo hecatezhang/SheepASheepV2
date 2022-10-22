@@ -149,6 +149,7 @@ const waitForSomeTime = async (runningTime) => {
 };
 
 const sendSolutionToServer = async (
+  token,
   mapInfo,
   mapData,
   solution,
@@ -225,6 +226,7 @@ const main = async (isTopic) => {
         continue;
       }
       await sendSolutionToServer(
+        token,
         mapInfo,
         mapData,
         solution,
