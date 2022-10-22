@@ -192,7 +192,6 @@ const main = async (isTopic) => {
     try {
       console.log(">>> 第", retryCount, "次尝试 <<<");
       console.log("===================================");
-      await delay(3);
       console.log(">> 初始化地图信息 <<");
       const [mapInfo, mapData] = await initialize(token, isTopic);
       console.log("===================================");
@@ -204,7 +203,7 @@ const main = async (isTopic) => {
       const solution = await filterSolutions(threads);
       if (!solution) {
         console.log("无解, 开始下一轮尝试");
-        await delay(3);
+        await delay(2);
         continue;
       }
       const endTime = performance.now();
