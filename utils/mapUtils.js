@@ -1,5 +1,7 @@
+const fs = require("fs");
 const { Randomizer } = require("./randomizer");
-const { getMapFromMD5 } = require("../services/services")
+const { getMapFromMD5 } = require("../services/services");
+const path = require("path");
 
 class Chessboard {
   constructor() {
@@ -160,8 +162,45 @@ const getMapFromMapInformation = (map, mapSeed) => {
 //   return result;
 // };
 
+const getMapCacheFolderPath = () => {
+  return path.join(__dirname, "..", "cache", "maps");
+};
+const getMapCacheFilePath = (md5) => {
+  return path.join(getMapCacheFolderPath(), `${md5}.txt`);
+};
+
+const exitsInCache = (md5) => {
+  if (!fs.existsSync(getMapCacheFilePath(md5))) {
+    console.log("地图数据未被缓存");
+    return false;
+  } else {
+    console.log("地图数据已被缓存");
+    return true;
+  }
+};
+
+const writeToCache = (md5, mapData) => {
+  console.log("写入地图数据到缓存");
+  const mapCacheFolderPath = getMapCacheFolderPath();
+  if (!fs.existsSync(mapCacheFolderPath)) {
+    fs.mkdirSync(mapCacheFolderPath, { recursive: true });
+  }
+  fs.writeFileSync(getMapCacheFilePath(md5), JSON.stringify(mapData));
+};
+
+const readFromCache = (md5) => {
+  console.log("从缓存读取地图数据");
+  return JSON.parse(fs.readFileSync(getMapCacheFilePath(md5)));
+};
+
 const getMap = async (md5, mapSeed) => {
-  const rawMap = await getMapFromMD5(md5);
+  let rawMap;
+  if (exitsInCache(md5)) {
+    rawMap = readFromCache(md5);
+  } else {
+    rawMap = await getMapFromMD5(md5);
+    writeToCache(md5, rawMap);
+  }
   // return processLevelData(getMapFromMapInformation(rawMap, mapSeed));
   return getMapFromMapInformation(rawMap, mapSeed);
 };

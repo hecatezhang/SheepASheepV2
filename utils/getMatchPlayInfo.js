@@ -50,4 +50,4 @@ function topicMatchPlayInfoToStr(map, solution) {
   });
 }
 
-module.exports = { matchPlayInfoToStr };
+module.exports = { matchPlayInfoToStr, topicMatchPlayInfoToStr };

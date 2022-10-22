@@ -11,7 +11,10 @@ const {
   sendMatchInfo,
 } = require("../services/services");
 const { getRandom, delay, prompt } = require("./helpers");
-const { matchPlayInfoToStr } = require("./getMatchPlayInfo");
+const {
+  matchPlayInfoToStr,
+  topicMatchPlayInfoToStr,
+} = require("./getMatchPlayInfo");
 const { getSkinName } = require("./skins");
 
 const getMode = (issort, percent) => {
@@ -210,7 +213,12 @@ const main = async (isTopic) => {
       await waitForSomeTime(runningTime);
 
       console.log(">> 发送MatchPlayInfo到服务器 <<");
-      const matchPlayInfo = await matchPlayInfoToStr(mapData, solution);
+      let matchPlayInfo;
+      if (isTopic) {
+        matchPlayInfo = await topicMatchPlayInfoToStr(mapData, solution);
+      } else {
+        matchPlayInfo = await matchPlayInfoToStr(mapData, solution);
+      }
       // console.log(matchPlayInfo);
       let result;
       if (isTopic) {
