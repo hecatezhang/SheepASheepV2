@@ -138,7 +138,7 @@ const initialize = async (token, isTopic = false) => {
   console.log("获取地图信息");
   let mapInfoData;
   if (isTopic) {
-    mapInfoData = await getTopicMapInfo;
+    mapInfoData = await getTopicMapInfo(token);
   } else {
     mapInfoData = await getMapInfo(token);
   }
@@ -191,7 +191,7 @@ const main = async (isTopic) => {
       console.log("===================================");
       await delay(3);
       console.log(">> 初始化地图信息 <<");
-      const [mapInfo, mapData] = await initialize(token, true);
+      const [mapInfo, mapData] = await initialize(token, isTopic);
       console.log("===================================");
       console.log(">> 求解 <<");
       const startTime = performance.now();
@@ -220,11 +220,7 @@ const main = async (isTopic) => {
           matchPlayInfo
         );
       } else {
-        result = await sendMatchInfo(
-          token,
-          mapInfo.map_seed_2,
-          matchPlayInfo
-        );
+        result = await sendMatchInfo(token, mapInfo.map_seed_2, matchPlayInfo);
       }
       console.log("服务器返回数据:", result);
       const { err_code: errorCode, data } = result;

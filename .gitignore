@@ -3,3 +3,4 @@ SheepSolver/online_data.json
 SheepSolver/**/__pycache__
 map_data.json
 map_data_operations.json
+cache
