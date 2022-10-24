@@ -43,13 +43,8 @@ function flattenMapData(map) {
 function buildMatchPlayInfo(map, solution, gameType = 3) {
   let flattened = flattenMapData(map);
 
-  const idIndexMap = {};
-  flattened.forEach((value, index) => {
-    idIndexMap[value.id] = { ...value, index };
-  });
-
-  const stepInfoList = solution.map((id) => {
-    return { chessIndex: idIndexMap[id].index, timeTag: idIndexMap[id].type };
+  const stepInfoList = solution.map((index) => {
+    return { chessIndex: index, timeTag: flattened[index].type };
   });
 
   const matchPlayInfo = {
