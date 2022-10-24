@@ -65,7 +65,7 @@ const findSolution = (mapData, issort, percent = 0, t = 60) => {
 
     setTimeout(() => {
       py.kill();
-    }, t + 5);
+    }, (t + 5) * 1000);
   });
 };
 
