@@ -1,5 +1,3 @@
-// cd sheep_crack/ 
-// vi yang.proto
 package yang;
 syntax = "proto3";
 
