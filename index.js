@@ -1,6 +1,7 @@
+const { delay } = require("./utils/helpers");
 const spawn = require("child_process").spawn;
 
-const spawnSolverProcess = (type, token) => {
+const spawnSolverProcess = (type, id, token) => {
   return new Promise((resolve) => {
     const solverProcess = spawn("node", [`${type}.js`, "-t", token]);
     solverProcess.stdout.on("data", (data) => {
@@ -10,6 +11,23 @@ const spawnSolverProcess = (type, token) => {
         .filter((e) => e);
 
       for (line of outputs) {
+        if (line === ">>>CLEAR<<<") {
+          console.clear();
+          console.log(
+            "正在执行",
+            id,
+            type === "topic" ? "每日话题" : "每日挑战"
+          );
+          continue;
+        } else if (line === ">>>COMPLETED<<<") {
+          console.clear();
+          console.log(
+            id,
+            type === "topic" ? "每日话题" : "每日挑战",
+            "执行完毕"
+          );
+          continue;
+        }
         console.log(line);
       }
     });
@@ -19,6 +37,7 @@ const spawnSolverProcess = (type, token) => {
     });
 
     solverProcess.on("exit", () => {
+      console.log(id, type === "topic" ? "每日话题" : "每日挑战", "执行完毕");
       resolve();
     });
   });
@@ -32,12 +51,14 @@ const main = async () => {
     console.log("=========================");
     console.log("开始", id, "每日挑战");
     console.log("=========================");
-    await spawnSolverProcess("challenge", tokens[id]);
+    await spawnSolverProcess("challenge", id, tokens[id]);
+    await delay(3);
 
     console.log("=========================");
     console.log("开始", id, "每日话题");
     console.log("=========================");
-    await spawnSolverProcess("challenge", tokens[id]);
+    await spawnSolverProcess("challenge", id, tokens[id]);
+    await delay(3);
   }
 };
 
