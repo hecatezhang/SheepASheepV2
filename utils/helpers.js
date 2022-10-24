@@ -1,5 +1,6 @@
 const readline = require("readline");
 const protobufjs = require("protobufjs");
+const path = require("path");
 
 function delay(sec) {
   return new Promise(function (resolve) {
@@ -55,7 +56,7 @@ function buildMatchPlayInfo(map, solution, gameType = 3) {
 
 function matchPlayInfoToStr(map, solution, isTopic = false) {
   return new Promise((resolve) => {
-    protobufjs.load("yang.proto", (_, root) => {
+    protobufjs.load(path.join(__dirname, "yang.proto"), (_, root) => {
       const MatchPlayInfo = root.lookupType("yang.MatchPlayInfo");
       const matchPlayInfo = buildMatchPlayInfo(map, solution, isTopic ? 4 : 3);
       const buf = MatchPlayInfo.encode(matchPlayInfo).finish();
