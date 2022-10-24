@@ -24,6 +24,7 @@ function prompt(userPrompt) {
 
     rl.question(userPrompt, (token) => {
       resolve(token);
+      rl.close();
     });
   });
 }
@@ -79,4 +80,22 @@ const getSolverMode = (issort, percent) => {
   }
 };
 
-module.exports = { delay, getRandom, prompt, matchPlayInfoToStr, getSolverMode };
+const parseToken = (token) => {
+  return JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
+};
+
+const getExpirationDateFromToken = (token) => {
+  const { exp } = parseToken(token);
+  const date = new Date(+exp * 1000);
+
+  return date.toLocaleString();
+};
+
+module.exports = {
+  delay,
+  getRandom,
+  prompt,
+  matchPlayInfoToStr,
+  getSolverMode,
+  getExpirationDateFromToken,
+};

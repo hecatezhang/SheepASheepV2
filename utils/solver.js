@@ -14,6 +14,7 @@ const {
   prompt,
   matchPlayInfoToStr,
   getSolverMode,
+  getExpirationDateFromToken,
 } = require("./helpers");
 const { getSkinName } = require("./skins");
 
@@ -205,6 +206,16 @@ const main = async (isTopic) => {
     }
   } else {
     token = await prompt("请输入token: ");
+  }
+
+  console.log("===================================");
+  try {
+    console.log("token 过期时间:", getExpirationDateFromToken(token));
+    console.log("===================================");
+    await delay(2);
+  } catch (e) {
+    console.log("token 格式不正确");
+    exit(1);
   }
 
   while (1) {
