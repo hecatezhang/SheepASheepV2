@@ -15,58 +15,62 @@ const {
   matchPlayInfoToStr,
   getSolverMode,
   getExpirationDateFromToken,
+  flattenMapData,
 } = require("./helpers");
+const SolverNoProps = require("../sheep-solver");
 const { getSkinName } = require("./skins");
 
-const findSolution = (mapData, issort, percent = 0, t = 60) => {
+const findSolution = (mapData, t = 60) => {
   return new Promise((resolve) => {
-    let solved = false;
-    let solution = undefined;
-    const mode = getSolverMode(issort, percent);
-    console.log("启动", mode);
-
-    const pyExec = process.platform === "win32" ? "python" : "python3";
-    const args = [__dirname + "/../sheep/autoSolve.py", "-t", t, "-p", percent];
-    if (issort == "reverse") {
-      args.push("-s", "reverse");
-    }
-
-    const py = spawn(pyExec, args);
-
-    py.stdin.write(JSON.stringify(mapData));
-    py.stdin.end();
-
-    py.stdout.on("data", function (data) {
-      const outputs = data
-        .toString()
-        .split(/\r?\n/)
-        .filter((e) => e);
-
-      for (line of outputs) {
-        if (line.includes("result")) {
-          solved = true;
-          solution = JSON.parse(line.replace("result", ""));
-        }
-      }
-    });
-
-    py.stderr.on("data", function (data) {
-      console.error(data.toString());
-    });
-
-    py.on("exit", async () => {
-      if (!solved) {
-        console.log(mode, "在", t, "秒内没有找到解");
-      } else {
-        console.log(mode, "在", t, "秒内成功找到解, 等待其他线程结束");
-      }
-      resolve(solution);
-    });
-
-    setTimeout(() => {
-      py.kill();
-    }, (t + 5) * 1000);
+    const solver = new SolverNoProps(mapData, t);
+    const solution = solver.findSolution();
+    resolve(solution);
   });
+  //   const mode = getSolverMode(issort, percent);
+  //   console.log("启动", mode);
+
+  //   const pyExec = process.platform === "win32" ? "python" : "python3";
+  //   const args = [__dirname + "/../sheep/autoSolve.py", "-t", t, "-p", percent];
+  //   if (issort == "reverse") {
+  //     args.push("-s", "reverse");
+  //   }
+
+  //   const py = spawn(pyExec, args);
+
+  //   py.stdin.write(JSON.stringify(mapData));
+  //   py.stdin.end();
+
+  //   py.stdout.on("data", function (data) {
+  //     const outputs = data
+  //       .toString()
+  //       .split(/\r?\n/)
+  //       .filter((e) => e);
+
+  //     for (line of outputs) {
+  //       if (line.includes("result")) {
+  //         solved = true;
+  //         solution = JSON.parse(line.replace("result", ""));
+  //       }
+  //     }
+  //   });
+
+  //   py.stderr.on("data", function (data) {
+  //     console.error(data.toString());
+  //   });
+
+  //   py.on("exit", async () => {
+  //     if (!solved) {
+  //       console.log(mode, "在", t, "秒内没有找到解");
+  //     } else {
+  //       console.log(mode, "在", t, "秒内成功找到解, 等待其他线程结束");
+  //     }
+  //     resolve(solution);
+  //   });
+
+  //   setTimeout(() => {
+  //     py.kill();
+  //   }, (t + 5) * 1000);
+  // });
 };
 
 const filterSolutions = async (threads) => {
@@ -83,8 +87,8 @@ const filterSolutions = async (threads) => {
 
 const startThreads = (mapData, timeout) => {
   const promises = [];
-  promises.push(findSolution(mapData, "reverse", 0.85, timeout));
-  promises.push(findSolution(mapData, "reverse", 0, timeout));
+  promises.push(findSolution(mapData, timeout));
+  // promises.push(findSolution(mapData, "reverse", 0, timeout));
   // promises.push(findSolution(mapData, "", 0.85, timeout));
   // promises.push(findSolution(mapData, "", 0, timeout));
 
@@ -163,6 +167,8 @@ const sendSolutionToServer = async (
 ) => {
   await waitForSomeTime(runningTime);
   console.log(">> 发送MatchPlayInfo到服务器 <<");
+  console.log(solution);
+  exit(1);
   const matchPlayInfo = await matchPlayInfoToStr(mapData, solution, isTopic);
   // console.log(matchPlayInfo);
   const result = await sendMatchInfo(
@@ -182,10 +188,11 @@ const sendSolutionToServer = async (
 };
 
 const getSolutionFromSolver = async (mapData) => {
+  const cards = flattenMapData(mapData);
   console.log("===================================");
   console.log(">> 求解 <<");
   const startTime = performance.now();
-  const threads = startThreads(mapData, 60);
+  const threads = startThreads(cards, 60);
   console.log("===================================");
 
   const solution = await filterSolutions(threads);

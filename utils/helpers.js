@@ -30,12 +30,18 @@ function prompt(userPrompt) {
   });
 }
 
-function buildMatchPlayInfo(map, solution, gameType = 3) {
+function flattenMapData(map) {
   let flattened = [];
 
   for (idx in map.levelData) {
     flattened = [...flattened, ...map.levelData[idx]];
   }
+
+  return flattened;
+}
+
+function buildMatchPlayInfo(map, solution, gameType = 3) {
+  let flattened = flattenMapData(map);
 
   const idIndexMap = {};
   flattened.forEach((value, index) => {
@@ -99,4 +105,5 @@ module.exports = {
   matchPlayInfoToStr,
   getSolverMode,
   getExpirationDateFromToken,
+  flattenMapData,
 };
