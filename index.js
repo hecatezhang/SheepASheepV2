@@ -49,13 +49,13 @@ const main = async () => {
 
   for (id in tokens) {
     console.log("=========================");
-    console.log("开始", id, "每日挑战");
+    console.log("开始", id, "的每日挑战");
     console.log("=========================");
     await spawnSolverProcess("challenge", id, tokens[id]);
     await delay(3);
 
     console.log("=========================");
-    console.log("开始", id, "每日话题");
+    console.log("开始", id, "的每日话题");
     console.log("=========================");
     await spawnSolverProcess("challenge", id, tokens[id]);
     await delay(3);
