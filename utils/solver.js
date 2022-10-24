@@ -216,7 +216,7 @@ const main = async (isTopic) => {
   try {
     console.log("token 过期时间:", getExpirationDateFromToken(token));
     console.log("===================================");
-    await delay(2);
+    await delay(3);
   } catch (e) {
     console.log("token 格式不正确");
     exit(1);
