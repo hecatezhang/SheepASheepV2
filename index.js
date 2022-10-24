@@ -57,7 +57,7 @@ const main = async () => {
     console.log("=========================");
     console.log("开始", id, "每日话题");
     console.log("=========================");
-    await spawnSolverProcess("challenge", id, tokens[id]);
+    await spawnSolverProcess("topic", id, tokens[id]);
     await delay(3);
   }
 };
