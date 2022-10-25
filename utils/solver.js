@@ -37,6 +37,7 @@ const findSolution = (mapData, t = [30, 30, 30]) => {
     const stage2Solver = new SolverStage2(solution, t[2]);
     solution = stage2Solver.findSolution();
     resolve(solution);
+    console.log("运行完毕");
   });
 };
 
