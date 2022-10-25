@@ -1,4 +1,3 @@
-const spawn = require("child_process").spawn;
 const { exit } = require("process");
 const { performance } = require("perf_hooks");
 const { getMap } = require("./mapUtils");
@@ -13,64 +12,35 @@ const {
   delay,
   prompt,
   matchPlayInfoToStr,
-  getSolverMode,
   getExpirationDateFromToken,
+  flattenMapData,
 } = require("./helpers");
 const { getSkinName } = require("./skins");
+const SolverStage1 = require("../sheep-solver/stage1");
+const SolverStage2 = require("../sheep-solver/stage2");
 
-const findSolution = (mapData, issort, percent = 0, t = 60) => {
+const findSolution = (mapData, t = [30, 30, 30]) => {
   return new Promise((resolve) => {
-    let solved = false;
-    let solution = undefined;
-    const mode = getSolverMode(issort, percent);
-    console.log("启动", mode);
+    console.log("启动第一步模式1");
+    const stage1Solver1 = new SolverStage1(mapData, t[0]);
 
-    const pyExec = process.platform === "win32" ? "python" : "python3";
-    const args = [__dirname + "/../sheep/autoSolve.py", "-t", t, "-p", percent];
-    if (issort == "reverse") {
-      args.push("-s", "reverse");
+    let solution = stage1Solver1.findSolution();
+    if (!solution) {
+      console.log("第一步模式1无解，启动第一步模式2");
+      const stage1Solver2 = new SolverStage1(mapData, t[1], 2);
+      solution = stage1Solver2.findSolution();
     }
-
-    const py = spawn(pyExec, args);
-
-    py.stdin.write(JSON.stringify(mapData));
-    py.stdin.end();
-
-    py.stdout.on("data", function (data) {
-      const outputs = data
-        .toString()
-        .split(/\r?\n/)
-        .filter((e) => e);
-
-      for (line of outputs) {
-        if (line.includes("result")) {
-          solved = true;
-          solution = JSON.parse(line.replace("result", ""));
-        }
-      }
-    });
-
-    py.stderr.on("data", function (data) {
-      console.error(data.toString());
-    });
-
-    py.on("exit", async () => {
-      if (!solved) {
-        console.log(mode, "在", t, "秒内没有找到解");
-      } else {
-        console.log(mode, "在", t, "秒内成功找到解, 等待其他线程结束");
-      }
-      resolve(solution);
-    });
-
-    setTimeout(() => {
-      py.kill();
-    }, (t + 5) * 1000);
+    if (!solution) resolve(solution);
+    console.log("完成第一步，启动第二步");
+    const stage2Solver = new SolverStage2(solution, t[2]);
+    solution = stage2Solver.findSolution();
+    resolve(solution);
   });
 };
 
 const filterSolutions = async (threads) => {
   const solutions = await Promise.all(threads);
+  console.log("线程运行完毕");
   console.log("===================================");
   const validSolutions = solutions.filter((solution) => solution);
   if (validSolutions.length > 0) {
@@ -83,8 +53,8 @@ const filterSolutions = async (threads) => {
 
 const startThreads = (mapData, timeout) => {
   const promises = [];
-  promises.push(findSolution(mapData, "reverse", 0.85, timeout));
-  promises.push(findSolution(mapData, "reverse", 0, timeout));
+  promises.push(findSolution(mapData, timeout));
+  // promises.push(findSolution(mapData, "reverse", 0, timeout));
   // promises.push(findSolution(mapData, "", 0.85, timeout));
   // promises.push(findSolution(mapData, "", 0, timeout));
 
@@ -182,11 +152,11 @@ const sendSolutionToServer = async (
 };
 
 const getSolutionFromSolver = async (mapData) => {
+  const cards = flattenMapData(mapData);
   console.log("===================================");
   console.log(">> 求解 <<");
   const startTime = performance.now();
-  const threads = startThreads(mapData, 60);
-  console.log("===================================");
+  const threads = startThreads(cards, [30, 30, 30]);
 
   const solution = await filterSolutions(threads);
   const endTime = performance.now();

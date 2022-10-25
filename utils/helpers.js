@@ -30,20 +30,24 @@ function prompt(userPrompt) {
   });
 }
 
-function buildMatchPlayInfo(map, solution, gameType = 3) {
+function flattenMapData(map) {
   let flattened = [];
 
   for (idx in map.levelData) {
     flattened = [...flattened, ...map.levelData[idx]];
   }
 
-  const idIndexMap = {};
-  flattened.forEach((value, index) => {
-    idIndexMap[value.id] = { ...value, index };
-  });
+  return flattened;
+}
 
-  const stepInfoList = solution.map((id) => {
-    return { chessIndex: idIndexMap[id].index, timeTag: idIndexMap[id].type };
+function buildMatchPlayInfo(map, solution, gameType = 3) {
+  let flattened = flattenMapData(map);
+
+  const stepInfoList = solution.map((index) => {
+    return {
+      chessIndex: index,
+      timeTag: index > 0 ? flattened[index].type : index,
+    };
   });
 
   const matchPlayInfo = {
@@ -99,4 +103,5 @@ module.exports = {
   matchPlayInfoToStr,
   getSolverMode,
   getExpirationDateFromToken,
+  flattenMapData,
 };
