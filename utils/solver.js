@@ -166,20 +166,22 @@ const getSolutionFromSolver = async (mapData) => {
   return [solution, runningTime];
 };
 
-const main = async (isTopic) => {
+const main = async (isTopic, t, mode) => {
   let retryCount = 0;
-  let token;
+  let token = t;
   let serverMode = false;
 
-  if (process.argv.slice(2)[0] === "-t") {
-    token = process.argv.slice(2)[1];
-    serverMode = true;
-    if (!token) {
-      console.error("未提供token");
-      exit(1);
+  if (!token) {
+    if (process.argv.slice(2)[0] === "-t") {
+      token = process.argv.slice(2)[1];
+      serverMode = true;
+      if (!token) {
+        console.error("未提供token");
+        exit(1);
+      }
+    } else {
+      token = await prompt("请输入token: ");
     }
-  } else {
-    token = await prompt("请输入token: ");
   }
 
   console.log("===================================");
