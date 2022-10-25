@@ -66,7 +66,6 @@ function doOut(selected, topList, stepList, stepListOld, cards) {
     // return cards[b].idx - cards[a].idx
   });
   out = out.slice(0, 3);
-  console.log("out===========", out);
   // console.log(out.map(e=>cards[e].name))
 
   for (let e of Object.values(selected)) {
