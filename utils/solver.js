@@ -23,18 +23,19 @@ const SolverStage2 = require("../sheep-solver/stage2");
 
 const findSolution = (mapData, t = 60) => {
   return new Promise((resolve) => {
-    console.log("启动模式1");
+    console.log("启动第一步模式1");
     const stage1Solver1 = new SolverStage1(mapData, 30);
 
     let solution = stage1Solver1.findSolution();
     if (!solution) {
+      console.log("第一步模式1无解，启动第一步模式2");
       const stage1Solver2 = new SolverStage1(mapData, 30, 2);
       solution = stage1Solver2.findSolution();
     }
     if (!solution) resolve(solution);
+    console.log("完成第一步，启动第二步");
     const stage2Solver = new SolverStage2(solution, 30);
     solution = stage2Solver.findSolution();
-    console.log(solution);
     resolve(solution);
   });
 };

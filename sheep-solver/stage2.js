@@ -16,14 +16,10 @@ class SolverStage2 {
     this.situation = new Set();
     this.sortType = sortType;
 
-    console.log("from:", this.stepListOld.length);
-    console.log("options:", this.topList.length, this.selectedCount());
-
     while (this.selectedCount() < this.limit - 1) {
       let id = this.topList[0];
       this.select(id);
       this.stepListOld.push(this.stepList.pop()); // bug fixed
-      console.log("init select", id);
     }
     props.doOut(
       this.selected,
@@ -41,9 +37,6 @@ class SolverStage2 {
       this.cards
     );
     this.target += 4;
-
-    console.log("options:", this.topList.length, this.selectedCount());
-    console.log("try size:", this.target);
   }
 
   removeItem(list, e) {
@@ -101,11 +94,6 @@ class SolverStage2 {
     if (this.stepList.length + this.stepListOld.length >= this.target) {
       // print(stepList)
       this.stepList = this.stepListOld.concat(this.stepList);
-      console.log("cost:", (currTime - this.startTime) / 1000);
-      console.log("done:", this.stepList.length);
-      console.log("selected:", this.count);
-      console.log("options:", this.topList.length);
-      console.log(this.stepList.join(","));
       // console.log('types', stepList.map(e => cards[e] && cards[e].type).join(','))
       // return {stepList: this.stepList, topList: this.topList, selected: this.selected, cards: this.cards }
       return this.stepList;

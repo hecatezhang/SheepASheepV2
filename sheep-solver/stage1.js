@@ -24,14 +24,6 @@ class SolverStage1 {
 
     this.selected = {};
     this.stepList = [];
-    console.log("options:", this.topList.length);
-    console.log(
-      "target stage1:",
-      this.highLevelSize + this.lowLevelSize,
-      this.highLevelSize,
-      this.lowLevelSize
-    );
-    console.log("========");
   }
 
   removeItem(list, e) {
@@ -109,31 +101,6 @@ class SolverStage1 {
       hc >= this.highLevelSize &&
       this.stepList.length <= hc + this.lowLevelSize
     ) {
-      // print(stepList)
-      console.log("selected:", count);
-      console.log("options:", this.topList.length);
-
-      let hl = this.stepList.filter(
-        (e) => this.cards[e].layerNum >= this.layerLine
-      );
-      let ll = this.stepList.filter(
-        (e) => this.cards[e].layerNum < this.layerLine
-      );
-      console.log("stage1:", this.stepList.length, hl.length, ll.length);
-      console.log("========");
-      console.log(this.stepList.join(","));
-      console.log("========");
-      let rest = this.cards.filter((e) => !e.selected);
-      let hl2 = rest
-        .filter((e) => e.layerNum >= this.layerLine)
-        .map((e) => e.idx);
-      let ll2 = rest
-        .filter((e) => e.layerNum < this.layerLine)
-        .map((e) => e.idx);
-      console.log("rest of high level:", hl2.length);
-      console.log(hl2.join(","));
-      console.log("rest of low level:", ll2.length);
-      console.log(ll2.join(","));
       return {
         stepList: this.stepList,
         topList: this.topList,
