@@ -100,7 +100,7 @@ class SolverStage2 {
 
     if (this.stepList.length + this.stepListOld.length >= this.target) {
       // print(stepList)
-      this.stepList = this.stepListOld.concat(stepList);
+      this.stepList = this.stepListOld.concat(this.stepList);
       console.log("cost:", (currTime - this.startTime) / 1000);
       console.log("done:", this.stepList.length);
       console.log("selected:", this.count);
