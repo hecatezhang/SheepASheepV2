@@ -1,4 +1,3 @@
-const spawn = require("child_process").spawn;
 const { exit } = require("process");
 const { performance } = require("perf_hooks");
 const { getMap } = require("./mapUtils");
@@ -13,7 +12,6 @@ const {
   delay,
   prompt,
   matchPlayInfoToStr,
-  getSolverMode,
   getExpirationDateFromToken,
   flattenMapData,
 } = require("./helpers");
@@ -37,12 +35,12 @@ const findSolution = (mapData, t = [30, 30, 30]) => {
     const stage2Solver = new SolverStage2(solution, t[2]);
     solution = stage2Solver.findSolution();
     resolve(solution);
-    console.log("运行完毕");
   });
 };
 
 const filterSolutions = async (threads) => {
   const solutions = await Promise.all(threads);
+  console.log("线程运行完毕");
   console.log("===================================");
   const validSolutions = solutions.filter((solution) => solution);
   if (validSolutions.length > 0) {

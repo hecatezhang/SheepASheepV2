@@ -1,3 +1,4 @@
+const { performance } = require("perf_hooks");
 const helper = require("./util/helper");
 
 /**

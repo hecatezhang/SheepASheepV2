@@ -1,5 +1,5 @@
-const helper = require("./util/helper");
 const props = require("./util/props");
+const { performance } = require("perf_hooks");
 
 class SolverStage2 {
   constructor(mapData, timeout, sortType) {
