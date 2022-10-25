@@ -158,7 +158,6 @@ const getSolutionFromSolver = async (mapData) => {
   console.log(">> 求解 <<");
   const startTime = performance.now();
   const threads = startThreads(cards, 60);
-  console.log("===================================");
 
   const solution = await filterSolutions(threads);
   const endTime = performance.now();
