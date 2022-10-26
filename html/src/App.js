@@ -34,12 +34,12 @@ const App = () => {
           <Outlet />
         </div>
         {connected ? (
-          <div className="bg-emerald-400 p-4 text-gray-700">
-            已连接到服务器: {SERVER_URL}
+          <div className="bg-emerald-400 p-4 text-gray-700 flex w-full text-center">
+            <div className="w-full">已连接到服务器: {SERVER_URL}</div>
           </div>
         ) : (
-          <div className="bg-orange-400 p-4 text-gray-700">
-            正在连接到服务器: {SERVER_URL}
+          <div className="bg-orange-400 p-4 text-gray-700 flex w-full text-center">
+            <div className="w-full">正在连接到服务器: {SERVER_URL}</div>
           </div>
         )}
       </div>

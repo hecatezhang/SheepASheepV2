@@ -23,36 +23,38 @@ const NavBar = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex w-full h-14 divide-x divide-slate-400 bg-zinc-700 text-gray-200">
-      <NavBarBrand>羊了个羊羊</NavBarBrand>
-      <NavBarItem
-        onClick={() => {
-          navigate("/");
-        }}
-      >
-        主页
-      </NavBarItem>
-      <NavBarItem
-        onClick={() => {
-          navigate("challenge");
-        }}
-      >
-        每日挑战
-      </NavBarItem>
-      <NavBarItem
-        onClick={() => {
-          navigate("topic");
-        }}
-      >
-        今日话题
-      </NavBarItem>
-      <NavBarItem
-        onClick={() => {
-          navigate("settings");
-        }}
-      >
-        设置
-      </NavBarItem>
+    <div className="flex w-full h-14 divide-x bg-zinc-700 text-gray-200">
+      <div className="flex h-full divide-x divide-slate-400 flex-grow lg:justify-center">
+        <NavBarBrand>羊了个羊羊</NavBarBrand>
+        <NavBarItem
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          主页
+        </NavBarItem>
+        <NavBarItem
+          onClick={() => {
+            navigate("challenge");
+          }}
+        >
+          每日挑战
+        </NavBarItem>
+        <NavBarItem
+          onClick={() => {
+            navigate("topic");
+          }}
+        >
+          今日话题
+        </NavBarItem>
+        <NavBarItem
+          onClick={() => {
+            navigate("settings");
+          }}
+        >
+          设置
+        </NavBarItem>
+      </div>
     </div>
   );
 };
