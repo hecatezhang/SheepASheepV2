@@ -63,7 +63,7 @@ const startThreads = (mapData, timeout) => {
   return promises;
 };
 
-const initializeTopic = async (token, skins) => {
+const initializeTopic = async (serverMode, token, skins) => {
   const topicInfoData = await getTopicInfo(token);
   if (topicInfoData.err_code !== 0) {
     console.error("无法获取话题数据, 请检查token是否有效");
@@ -123,10 +123,10 @@ const initializeTopic = async (token, skins) => {
   }
 };
 
-const initialize = async (token, isTopic = false, skins) => {
+const initialize = async (token, serverMode, isTopic = false, skins) => {
   console.log(">> 初始化地图信息 <<");
   if (isTopic) {
-    await initializeTopic(token, skins);
+    await initializeTopic(token, serverMode, skins);
   }
   console.log("获取地图信息");
   const mapInfoData = await getMapInfo(token, isTopic);
@@ -243,7 +243,12 @@ const main = async (isTopic, t, mode) => {
       console.log(">>> 第", retryCount, "次尝试 <<<");
       console.log("===================================");
 
-      const [mapInfo, mapData] = await initialize(token, isTopic, skins);
+      const [mapInfo, mapData] = await initialize(
+        token,
+        serverMode,
+        isTopic,
+        skins
+      );
       const [solution, runningTime] = await getSolutionFromSolver(mapData);
       if (!solution) {
         console.log("无解, 开始下一轮尝试");
