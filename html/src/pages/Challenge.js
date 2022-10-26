@@ -2,7 +2,7 @@ import Solver from "../components/Solver";
 
 const Challenge = () => {
   return (
-    <div>
+    <div className="w-full">
       <Solver solverType="challenge" />
     </div>
   );

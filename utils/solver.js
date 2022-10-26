@@ -95,9 +95,11 @@ const initializeTopic = async (token, skins) => {
   }
   let chosenSide;
   if (side === 0) {
-    const input = await prompt("今日未选择队伍，请输入1(左侧) 或 2(右侧)");
-    chosenSide = parseInt(input, 10);
-    if (chosenSide < 1 || chosenSide > 2) {
+    if (!serverMode) {
+      const input = await prompt("今日未选择队伍，请输入1(左侧) 或 2(右侧)");
+      chosenSide = parseInt(input, 10);
+    }
+    if (serverMode || chosenSide < 1 || chosenSide > 2) {
       chosenSide = getRandom(1, 3);
       console.log("已随机选择", chosenSide === 1 ? "左侧" : "右侧", "队伍");
     }

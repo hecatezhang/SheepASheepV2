@@ -26,11 +26,11 @@ const App = () => {
 
   return (
     <SocketContext.Provider value={[socket, connected]}>
-      <div className="flex flex-col h-screen">
+      <div className="flex flex-col min-h-screen">
         <div>
           <NavBar />
         </div>
-        <div className="px-6 py-8 h-full text-gray-700">
+        <div className="flex align-middle flex-grow px-6 py-8 h-full text-gray-700">
           <Outlet />
         </div>
         {connected ? (
