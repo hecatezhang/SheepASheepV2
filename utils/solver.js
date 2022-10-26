@@ -74,12 +74,8 @@ const initializeTopic = async (token, serverMode, skins) => {
   const topicId = topicInfoData.data.topic_id;
   const topic = getTopic(topicId);
   if (topic !== topicId) {
-    console.log(
-      "左侧:",
-      getSkinName(topic.leftId),
-      "右侧:",
-      getSkinName(topic.rightId)
-    );
+    console.log("左侧:", getSkinName(topic.leftId));
+    console.log("右侧:", getSkinName(topic.rightId));
   }
   if (skins) {
     const owned = skins.filter(
@@ -96,7 +92,9 @@ const initializeTopic = async (token, serverMode, skins) => {
   let chosenSide;
   if (side === 0) {
     if (!serverMode) {
-      const input = await prompt("今日未选择队伍，请输入1(左侧) 或 2(右侧)");
+      const input = await prompt(
+        "今日未选择队伍，请输入 1 (左侧) 或 2 (右侧): "
+      );
       chosenSide = parseInt(input, 10);
     }
     if (serverMode || chosenSide < 1 || chosenSide > 2) {
@@ -112,7 +110,7 @@ const initializeTopic = async (token, serverMode, skins) => {
     const {
       data: { side },
     } = await getTopicInfo(token);
-    if (side !== randSide) {
+    if (side !== chosenSide) {
       console.error("无法加入队伍");
       exit(1);
     } else {
