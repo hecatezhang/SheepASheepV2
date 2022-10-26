@@ -6,6 +6,7 @@ const {
   getTopicInfo,
   topicJoinSide,
   sendMatchInfo,
+  getSkinInfo,
 } = require("../services/services");
 const {
   getRandom,
@@ -16,6 +17,7 @@ const {
   flattenMapData,
 } = require("./helpers");
 const { getSkinName } = require("./skins");
+const { getTopic } = require("./topics");
 const SolverStage1 = require("../sheep-solver/stage1");
 const SolverStage2 = require("../sheep-solver/stage2");
 
@@ -61,7 +63,7 @@ const startThreads = (mapData, timeout) => {
   return promises;
 };
 
-const initializeTopic = async (token) => {
+const initializeTopic = async (token, skins) => {
   const topicInfoData = await getTopicInfo(token);
   if (topicInfoData.err_code !== 0) {
     console.error("无法获取话题数据, 请检查token是否有效");
@@ -69,14 +71,38 @@ const initializeTopic = async (token) => {
   }
 
   const side = topicInfoData.data.side;
-  if (side === 0) {
-    const randSide = getRandom(1, 3);
+  const topicId = topicInfoData.data.topic_id;
+  const topic = getTopic(topicId);
+  if (topic !== topicId) {
     console.log(
-      "今日未选择队伍，随机选择",
-      randSide === 1 ? "左侧" : "右侧",
-      "队伍"
+      "左侧:",
+      getSkinName(topic.leftId),
+      "右侧:",
+      getSkinName(topic.rightId)
     );
-    const { err_code: errorCode } = await topicJoinSide(token, randSide);
+  }
+  if (skins) {
+    const owned = skins.filter(
+      (s) => s.id === topic.leftId || s.id === topic.rightId
+    );
+    if (owned.length > 0) {
+      console.log(
+        "* 已拥有: ",
+        owned.map((o) => getSkinName(o.id)).join(","),
+        "*"
+      );
+    }
+  }
+  let chosenSide;
+  if (side === 0) {
+    const input = await prompt("今日未选择队伍，请输入1(左侧) 或 2(右侧)");
+    chosenSide = parseInt(input, 10);
+    if (chosenSide < 1 || chosenSide > 2) {
+      chosenSide = getRandom(1, 3);
+      console.log("已随机选择", chosenSide === 1 ? "左侧" : "右侧", "队伍");
+    }
+
+    const { err_code: errorCode } = await topicJoinSide(token, chosenSide);
     if (errorCode !== 0) {
       console.error("无法加入队伍");
       exit(1);
@@ -95,10 +121,10 @@ const initializeTopic = async (token) => {
   }
 };
 
-const initialize = async (token, isTopic = false) => {
+const initialize = async (token, isTopic = false, skins) => {
   console.log(">> 初始化地图信息 <<");
   if (isTopic) {
-    await initializeTopic(token);
+    await initializeTopic(token, skins);
   }
   console.log("获取地图信息");
   const mapInfoData = await getMapInfo(token, isTopic);
@@ -187,12 +213,22 @@ const main = async (isTopic, t, mode) => {
   console.log("===================================");
   try {
     console.log("token 过期时间:", getExpirationDateFromToken(token));
-    console.log("===================================");
-    await delay(3);
   } catch (e) {
     console.log("token 格式不正确");
     exit(1);
   }
+  console.log("===================================");
+
+  const skins = (await getSkinInfo(token)).data.skin_list;
+  if (skins && skins.length > 0) {
+    console.log("已取得的皮肤:");
+    for (let i = 0; i < skins.length; i += 4) {
+      const chunk = skins.slice(i, i + 4);
+      console.log(chunk.map((s) => getSkinName(s.id)).join(", "));
+    }
+  }
+  console.log("===================================");
+  await delay(3);
 
   while (1) {
     if (serverMode) {
@@ -205,7 +241,7 @@ const main = async (isTopic, t, mode) => {
       console.log(">>> 第", retryCount, "次尝试 <<<");
       console.log("===================================");
 
-      const [mapInfo, mapData] = await initialize(token, isTopic);
+      const [mapInfo, mapData] = await initialize(token, isTopic, skins);
       const [solution, runningTime] = await getSolutionFromSolver(mapData);
       if (!solution) {
         console.log("无解, 开始下一轮尝试");

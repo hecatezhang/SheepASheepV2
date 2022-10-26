@@ -1,0 +1,178 @@
+const topics = [
+  {
+    id: 1,
+    leftId: 8,
+    platform: 1,
+    rightId: 9,
+    topicId: 1,
+  },
+  {
+    id: 2,
+    leftId: 10,
+    platform: 1,
+    rightId: 11,
+    topicId: 2,
+  },
+  {
+    id: 3,
+    leftId: 12,
+    platform: 1,
+    rightId: 13,
+    topicId: 3,
+  },
+  {
+    id: 4,
+    leftId: 41,
+    platform: 1,
+    rightId: 42,
+    topicId: 4,
+  },
+  {
+    id: 5,
+    leftId: 43,
+    platform: 1,
+    rightId: 44,
+    topicId: 5,
+  },
+  {
+    id: 6,
+    leftId: 45,
+    platform: 1,
+    rightId: 46,
+    topicId: 6,
+  },
+  {
+    id: 7,
+    leftId: 47,
+    platform: 1,
+    rightId: 48,
+    topicId: 7,
+  },
+  {
+    id: 8,
+    leftId: 49,
+    platform: 1,
+    rightId: 50,
+    topicId: 8,
+  },
+  {
+    id: 9,
+    leftId: 65,
+    platform: 1,
+    rightId: 66,
+    topicId: 9,
+  },
+  {
+    id: 10,
+    leftId: 67,
+    platform: 1,
+    rightId: 68,
+    topicId: 10,
+  },
+  {
+    id: 11,
+    leftId: 69,
+    platform: 1,
+    rightId: 70,
+    topicId: 11,
+  },
+  {
+    id: 12,
+    leftId: 71,
+    platform: 1,
+    rightId: 72,
+    topicId: 12,
+  },
+  {
+    id: 13,
+    leftId: 73,
+    platform: 1,
+    rightId: 74,
+    topicId: 13,
+  },
+  {
+    id: 14,
+    leftId: 75,
+    platform: 1,
+    rightId: 76,
+    topicId: 14,
+  },
+  {
+    id: 15,
+    leftId: 1009,
+    platform: 2,
+    rightId: 1010,
+    topicId: 1001,
+  },
+  {
+    id: 16,
+    leftId: 1063,
+    platform: 2,
+    rightId: 1064,
+    topicId: 1002,
+  },
+  {
+    id: 17,
+    leftId: 1065,
+    platform: 2,
+    rightId: 1066,
+    topicId: 1003,
+  },
+  {
+    id: 18,
+    leftId: 1007,
+    platform: 2,
+    rightId: 1008,
+    topicId: 1004,
+  },
+  {
+    id: 19,
+    leftId: 1049,
+    platform: 2,
+    rightId: 1050,
+    topicId: 1005,
+  },
+  {
+    id: 20,
+    leftId: 1051,
+    platform: 2,
+    rightId: 1052,
+    topicId: 1006,
+  },
+  {
+    id: 21,
+    leftId: 1053,
+    platform: 2,
+    rightId: 1054,
+    topicId: 1007,
+  },
+  {
+    id: 22,
+    leftId: 1057,
+    platform: 2,
+    rightId: 1058,
+    topicId: 1008,
+  },
+  {
+    id: 23,
+    leftId: 1059,
+    platform: 2,
+    rightId: 1060,
+    topicId: 1009,
+  },
+  {
+    id: 24,
+    leftId: 1061,
+    platform: 2,
+    rightId: 1062,
+    topicId: 1010,
+  },
+];
+
+const getTopic = (id) => {
+  const topic = topics.find((t) => t.topicId === id);
+
+  return topic || id;
+};
+
+module.exports = { getTopic };
