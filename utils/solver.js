@@ -63,7 +63,7 @@ const startThreads = (mapData, timeout) => {
   return promises;
 };
 
-const initializeTopic = async (serverMode, token, skins) => {
+const initializeTopic = async (token, serverMode, skins) => {
   const topicInfoData = await getTopicInfo(token);
   if (topicInfoData.err_code !== 0) {
     console.error("无法获取话题数据, 请检查token是否有效");
