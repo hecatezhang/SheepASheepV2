@@ -214,7 +214,7 @@ const main = async (isTopic, t, mode) => {
   try {
     console.log("token 过期时间:", getExpirationDateFromToken(token));
   } catch (e) {
-    console.log("token 格式不正确");
+    console.error("token 格式不正确");
     exit(1);
   }
   console.log("===================================");

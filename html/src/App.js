@@ -26,9 +26,9 @@ const App = () => {
 
   return (
     <SocketContext.Provider value={[socket, connected]}>
-      <div className="flex flex-col min-h-screen items-center text-[#eceff4]">
+      <div className="flex flex-col min-h-screen items-center text-[#d8dee9]">
         <NavBar />
-        <div className="flex align-middle flex-grow px-6 py-4 w-full md:w-11/12 lg:w-8/12 [@media(min-width:1600px)]:w-5/12 h-full text-[#2e3400]">
+        <div className="flex align-middle flex-grow px-6 py-4 w-full md:w-11/12 lg:w-8/12 [@media(min-width:1600px)]:w-5/12 h-full">
           <Outlet />
         </div>
         <div className="flex w-full text-[#2e3440]">

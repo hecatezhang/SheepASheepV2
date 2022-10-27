@@ -4,7 +4,7 @@ const MessageCard = ({ type, msg }) => {
       {type === "error" ? (
         <div className="text-error">{msg}</div>
       ) : (
-        <div className="text-[#8fbcbb]">{msg}</div>
+        <div className="text-[#5E81AC]">{msg}</div>
       )}
     </>
   );

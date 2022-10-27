@@ -9,11 +9,11 @@ const TokenInput = ({ onClick }) => {
         <textarea
           id="token_input"
           placeholder="请在此处输入 token"
-          className="textarea bg-white w-full h-40 border p-3 focus:outline-none focus:shadow-lg focus:shadow-[#88c0d0] active:outline-none"
+          className="textarea bg-[#e5e9f0] text-[#4c566a] w-full h-40 border p-3 focus:outline-none focus:shadow-lg focus:shadow-[#b48ead] active:outline-none"
         />
         <div>
           <button
-            className="btn btn-block bg-[#5e81ac] text-lg"
+            className="btn btn-block bg-[#81a1c1] text-lg hover:text-[#d8dee9] hover:bg-[#4c566a]"
             onClick={onClick}
           >
             开 始
@@ -26,6 +26,7 @@ const TokenInput = ({ onClick }) => {
 
 const Solver = ({ solverType }) => {
   const [messageList, setMessageList] = useState([]);
+  const [hasError, setHasError] = useState(false);
   const [socket, connected] = useContext(SocketContext);
 
   useEffect(() => {
@@ -52,12 +53,14 @@ const Solver = ({ solverType }) => {
 
     socket.on("solverError", (msg) => {
       setMessageList((messageList) => [...messageList, { type: "error", msg }]);
+      setHasError(true);
 
       console.error(msg);
     });
 
     socket.on("solverStarted", () => {
       setMessageList(() => []);
+      setHasError(false);
     });
   }, [socket]);
 
@@ -89,11 +92,23 @@ const Solver = ({ solverType }) => {
             <div className="divider before:bg-[#4c566a] after:bg-[#4c566a] before:h-px after:h-px">
               程序输出
             </div>
-            <div className="flex flex-col border p-3 rounded-md shadow-lg shadow-[#8fbcbb] w-full overflow-auto bg-base-100 md:text-center">
-              {messageList.map(({ type, msg }, index) => (
-                <MessageCard key={msg + index} msg={msg} type={type} />
-              ))}
-            </div>
+            {hasError ? (
+              <div
+                className={`flex flex-col p-3 bg-[#eceff4] rounded-lg shadow-lg shadow-error w-full overflow-auto md:text-center`}
+              >
+                {messageList.map(({ type, msg }, index) => (
+                  <MessageCard key={msg + index} msg={msg} type={type} />
+                ))}
+              </div>
+            ) : (
+              <div
+                className={`flex flex-col p-3 bg-[#eceff4] rounded-lg shadow-lg shadow-success w-full overflow-auto md:text-center`}
+              >
+                {messageList.map(({ type, msg }, index) => (
+                  <MessageCard key={msg + index} msg={msg} type={type} />
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>

@@ -11,7 +11,7 @@ const Settings = () => {
           <div className="flex w-full justify-center items-center lg:w-auto">
             <label className="text-lg">后端地址：</label>
             <input
-              className="w-60 rounded input input-bordered bg-white border-[#434c5e] focus:border-1 focus:outline-none focus:shadow-md focus:shadow-[#2e3440]"
+              className="w-60 rounded input input-bordered bg-[#e5e9f0] border-[#434c5e] text-[#4c566a] focus:border-1 focus:outline-none focus:shadow-lg focus:shadow-[#b48ead]"
               name="server_url_input"
               value={newServerURL}
               onChange={(e) => {
@@ -21,7 +21,7 @@ const Settings = () => {
           </div>
           <div className="flex w-full md:w-auto justify-center">
             <button
-              className="btn bg-[#5e81ac]"
+              className="btn bg-[#81a1c1] hover:text-[#d8dee9] hover:bg-[#4c566a]"
               type="button"
               onClick={() => {
                 localStorage.setItem("server_url", newServerURL);
