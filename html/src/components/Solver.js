@@ -4,21 +4,21 @@ import { SocketContext } from "../App";
 
 const TokenInput = ({ onClick }) => {
   return (
-    <div className="flex flex-col w-auto space-y-4">
-      <div className="flex flex-col w-auto space-y-4">
+    <div className="flex flex-col w-full space-y-4">
+      <div className="flex flex-col w-full space-y-4">
         <textarea
           id="token_input"
-          placeholder="输入token，然后点击冲"
-          className="w-80 h-40 border border-slate-600 p-3"
+          placeholder="请在此处输入 token"
+          className="textarea bg-white w-full h-40 border p-3 focus:outline-none focus:shadow-lg focus:shadow-[#88c0d0] active:outline-none"
         />
-      </div>
-      <div>
-        <button
-          className="text-lg border border-slate-600 w-20 rounded-lg p-2"
-          onClick={onClick}
-        >
-          冲!
-        </button>
+        <div>
+          <button
+            className="btn btn-block bg-[#5e81ac] text-lg"
+            onClick={onClick}
+          >
+            开 始
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -75,21 +75,26 @@ const Solver = ({ solverType }) => {
   };
 
   return (
-    <div className="flex flex-col self-center w-11/12">
-      <div className="flex flex-col align-middle items-center w-auto space-y-4">
-        <div className="flex flex-col text-3xl py-5">
+    <div className="flex flex-col self-center items-center w-full bg-neutral-content flex-grow rounded-lg">
+      <div className="flex flex-col align-middle items-center w-full lg:w-11/12 space-y-4 p-3 pb-8">
+        <div className="flex flex-col text-2xl py-5">
           {solverType === "challenge" ? "每日挑战" : "今日话题"}自动解题
         </div>
         {!connected && (
-          <div className="text-2xl text-red-700">!!!未连接至服务器!!!</div>
+          <div className="text-2xl text-error">!!!未连接至服务器!!!</div>
         )}
         {connected && <TokenInput onClick={onClick} />}
         {connected && messageList.length !== 0 && (
-          <div className="flex flex-col space-y-2 border p-3 rounded-md border-slate-300 overflow-auto w-full md:w-auto max-h-96 bg-zinc-800">
-            {messageList.map(({ type, msg }, index) => (
-              <MessageCard key={msg + index} msg={msg} type={type} />
-            ))}
-          </div>
+          <>
+            <div className="divider before:bg-[#4c566a] after:bg-[#4c566a] before:h-px after:h-px">
+              程序输出
+            </div>
+            <div className="flex flex-col border p-3 rounded-md shadow-lg shadow-[#8fbcbb] w-full overflow-auto bg-base-100">
+              {messageList.map(({ type, msg }, index) => (
+                <MessageCard key={msg + index} msg={msg} type={type} />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>
