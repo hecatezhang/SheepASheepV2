@@ -5,3 +5,4 @@ if (!localStorage.getItem("server_url")) {
 }
 
 window.SERVER_URL = localStorage.getItem("server_url");
+window.enableSettingsPage = true;

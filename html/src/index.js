@@ -20,7 +20,9 @@ const router = createBrowserRouter(
       <Route path="" element={<Home />} />
       <Route path="challenge" element={<Challenge />} />
       <Route path="topic" element={<Topic />} />
-      <Route path="settings" element={<Settings />} />
+      {window.enableSettingsPage && (
+        <Route path="settings" element={<Settings />} />
+      )}
     </Route>
   )
 );

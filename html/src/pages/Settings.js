@@ -21,7 +21,7 @@ const Settings = () => {
           </div>
           <div className="flex w-full md:w-auto justify-center">
             <button
-              className="px-4 py-2 lg:py-0 border border-slate-700 rounded"
+              className="btn bg-[#5e81ac]"
               type="button"
               onClick={() => {
                 localStorage.setItem("server_url", newServerURL);

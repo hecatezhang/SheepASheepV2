@@ -89,7 +89,7 @@ const Solver = ({ solverType }) => {
             <div className="divider before:bg-[#4c566a] after:bg-[#4c566a] before:h-px after:h-px">
               程序输出
             </div>
-            <div className="flex flex-col border p-3 rounded-md shadow-lg shadow-[#8fbcbb] w-full overflow-auto bg-base-100">
+            <div className="flex flex-col border p-3 rounded-md shadow-lg shadow-[#8fbcbb] w-full overflow-auto bg-base-100 md:text-center">
               {messageList.map(({ type, msg }, index) => (
                 <MessageCard key={msg + index} msg={msg} type={type} />
               ))}

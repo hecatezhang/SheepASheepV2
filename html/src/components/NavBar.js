@@ -29,7 +29,9 @@ const NavBar = () => {
             每日挑战
           </NavBarItem>
           <NavBarItem onClick={() => navigate("topic")}>今日话题</NavBarItem>
-          <NavBarItem onClick={() => navigate("settings")}>设置</NavBarItem>
+          {window.enableSettingsPage && (
+            <NavBarItem onClick={() => navigate("settings")}>设置</NavBarItem>
+          )}
         </ul>
       </div>
     </div>
