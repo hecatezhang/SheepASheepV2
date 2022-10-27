@@ -5,7 +5,7 @@ const Settings = () => {
 
   return (
     <div className="flex flex-col w-full items-center space-y-4 flex-grow bg-neutral rounded-lg">
-      <div className="text-3xl text-center w-full py-5">设置</div>
+      <div className="text-2xl text-center w-full py-8">设置</div>
       <div className="flex w-full">
         <div className="flex flex-col lg:flex-row w-full justify-center space-y-8 lg:space-y-0 lg:space-x-4">
           <div className="flex w-full justify-center items-center lg:w-auto">

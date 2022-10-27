@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useNavigate } from "react-router-dom";
 
-const NavBarBrand = ({ children }) => {
+const NavBarBrand = ({ children, onClick }) => {
   return (
     <li className="hidden [@media(min-width:340px)]:flex font-bold">
-      <a>{children}</a>
+      <a onClick={onClick}>{children}</a>
     </li>
   );
 };
@@ -24,7 +24,7 @@ const NavBar = () => {
     <div className="navbar bg-base-100 justify-center">
       <div className="navbar-center flex">
         <ul className="menu menu-horizontal p-0 text-lg">
-          <NavBarBrand>羊了个羊</NavBarBrand>
+          <NavBarBrand onClick={() => navigate("/")}>羊了个羊</NavBarBrand>
           <NavBarItem onClick={() => navigate("challenge")}>
             每日挑战
           </NavBarItem>
