@@ -1,4 +1,4 @@
-# SheepASheepV2 Based On bc0042/sheep-solver
+# SheepASheepV2 Based On bc0042/sheep-solver NB-Dragon/SheepSolver
 
 ## 安装
 
